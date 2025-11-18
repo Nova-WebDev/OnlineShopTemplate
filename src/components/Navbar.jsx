@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { CartDropdown } from "./CartDropdown";
+import Swal from "sweetalert2";
+
 
 export const Navbar = () => {
     const CART_KEY = "cart_items";
@@ -23,12 +25,19 @@ export const Navbar = () => {
     const totalQty = cart.reduce((s, it) => s + it.quantity, 0);
 
     const toggleCart = () => {
-        if (cart.length === 0) {
-            alert("سبد خرید شما خالی است");
-            return;
-        }
-        setOpen((p) => !p);
-    };
+    if (cart.length === 0) {
+        Swal.fire({
+            icon: "warning",
+            title: "سبد خرید خالی است",
+            text: "لطفاً ابتدا محصولی اضافه کنید",
+            confirmButtonText: "باشه",
+            confirmButtonColor: "#f97316", // رنگ دکمه (نارنجی Tailwind)
+        });
+        return;
+    }
+    setOpen((p) => !p);
+};
+
 
     return (
         <nav className="from-orange-100 via-white to-orange-50 shadow-sm border-b border-orange-200 bg-white relative">
@@ -46,17 +55,13 @@ export const Navbar = () => {
                     <div className="relative">
                         <button onClick={toggleCart} className="relative cursor-pointer">
                             <i className="fas fa-shopping-cart text-xl"></i>
-
-                            <button onClick={toggleCart} className="relative cursor-pointer">
-                                <i className="fas fa-shopping-cart text-xl"></i>
-                                {totalQty > 0 ? (
-                                    <span className="absolute -top-3 -right-3 bg-orange-600 text-white text-xs font-bold rounded-full px-2 py-0.5">
-                                        {totalQty}
-                                    </span>
-                                ) : null}
-                            </button>
-
+                            {totalQty > 0 ? (
+                                <span className="absolute -top-3 -right-3 bg-orange-600 text-white text-xs font-bold rounded-full px-2 py-0.5">
+                                    {totalQty}
+                                </span>
+                            ) : null}
                         </button>
+
                         {open && (
                             <CartDropdown cart={cart} setCart={setCart} onClose={() => setOpen(false)} />
                         )}
