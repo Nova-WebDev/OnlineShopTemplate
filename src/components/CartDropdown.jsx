@@ -7,6 +7,7 @@ export const CartDropdown = ({ onClose }) => {
 
   const cartItems = useSelector((state) => state.cart.cartItems);
 
+
   if (cartItems.length === 0) {
     onClose();
     return null;
